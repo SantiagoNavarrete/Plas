@@ -1,0 +1,32 @@
+export const tracks = [
+  {
+    id: 1,
+    title: 'WESTSIDEGUNN TYPE BEAT',
+    artist: 'PLAS',
+    genre: 'Boombap',
+    year: '2026',
+    duration: '02:42',
+    cover: '../public/PLAS.png',
+    audio: '../src/audio/WESTSIDE.mp3',
+  },
+  {
+    id: 2,
+    title: 'CÓDIGO AZUL',
+    artist: 'PLAS · DEMO 02',
+    genre: 'Hip hop / Melódico',
+    year: '2024',
+    duration: '03:12',
+    cover: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=900&q=85',
+    audio: '/audio/track2.mp3',
+  },
+  {
+    id: 3,
+    title: 'SIN SEÑAL',
+    artist: 'PLAS · DEMO 03',
+    genre: 'R&B / Experimental',
+    year: '2023',
+    duration: '02:56',
+    cover: 'https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?auto=format&fit=crop&w=900&q=85',
+    audio: '/audio/track3.mp3',
+  },
+]
