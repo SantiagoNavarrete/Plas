@@ -96,7 +96,10 @@ const server = http.createServer(async (request, response) => {
 
     const preference = await mercadoPagoResponse.json()
     if (!mercadoPagoResponse.ok || !preference.init_point) {
-      sendJson(response, 502, { error: 'Mercado Pago no pudo crear la preferencia.' })
+      sendJson(response, 502, {
+        error: 'Mercado Pago no pudo crear la preferencia.',
+        detail: preference.message || preference.error || 'Revisá el token privado y la cuenta de Mercado Pago.',
+      })
       return
     }
     sendJson(response, 200, { init_point: preference.init_point })
