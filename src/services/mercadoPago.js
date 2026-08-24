@@ -11,6 +11,9 @@ export async function createDonationPreference(amount) {
     body: JSON.stringify({ amount }),
   })
 
-  if (!response.ok) throw new Error('No se pudo iniciar la donación.')
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}))
+    throw new Error(error.error || 'No se pudo iniciar la donación.')
+  }
   return response.json()
 }

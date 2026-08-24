@@ -1,5 +1,13 @@
 # React + Vite
 
+## Mercado Pago
+
+1. Copiá `.env.example` como `.env` y completá `MERCADOPAGO_ACCESS_TOKEN` con el token privado de tu aplicación de Mercado Pago.
+2. En una terminal ejecutá `npm run server`.
+3. En otra terminal ejecutá `npm run dev` y abrí la dirección que muestra Vite.
+
+El token se usa únicamente en el servidor y nunca se expone al navegador.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
