@@ -8,6 +8,10 @@
 
 El token se usa únicamente en el servidor y nunca se expone al navegador.
 
+## Contacto por email
+
+Para enviar consultas a `plasonthe@gmail.com`, activá la verificación en dos pasos de Gmail y creá una contraseña de aplicación. Completá `GMAIL_USER` y `GMAIL_APP_PASSWORD` en las variables privadas del backend. Nunca uses tu contraseña normal de Gmail ni subas `.env` al repositorio.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

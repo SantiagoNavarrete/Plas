@@ -1,9 +1,16 @@
 import http from 'node:http'
+import nodemailer from 'nodemailer'
 
 const port = Number(process.env.PORT || 3001)
 const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN
 const siteUrl = process.env.SITE_URL || 'http://localhost:5173'
 const webhookUrl = process.env.MERCADOPAGO_WEBHOOK_URL
+const emailUser = process.env.GMAIL_USER
+const emailPassword = process.env.GMAIL_APP_PASSWORD
+const mailTransport = emailUser && emailPassword ? nodemailer.createTransport({
+  service: 'gmail',
+  auth: { user: emailUser, pass: emailPassword },
+}) : null
 
 function sendJson(response, status, payload) {
   response.writeHead(status, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' })
@@ -14,6 +21,40 @@ const server = http.createServer(async (request, response) => {
   if (request.method === 'OPTIONS') {
     response.writeHead(204, { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type' })
     response.end()
+    return
+  }
+
+  if (request.method === 'GET' && (request.url === '/' || request.url === '/health')) {
+    sendJson(response, 200, { status: 'ok', service: 'plas-donations' })
+    return
+  }
+
+  if (request.method === 'POST' && request.url === '/api/contact') {
+    if (!mailTransport) {
+      sendJson(response, 500, { error: 'Falta configurar GMAIL_USER y GMAIL_APP_PASSWORD en el servidor.' })
+      return
+    }
+
+    try {
+      let rawBody = ''
+      for await (const chunk of request) rawBody += chunk
+      const { name, email, whatsapp, service, message } = JSON.parse(rawBody)
+      if (!name?.trim() || !email?.trim() || !message?.trim()) {
+        sendJson(response, 400, { error: 'Completá nombre, email y mensaje.' })
+        return
+      }
+
+      await mailTransport.sendMail({
+        from: emailUser,
+        to: emailUser,
+        replyTo: email.trim(),
+        subject: `Nueva consulta de ${name.trim()}`,
+        text: `Nombre: ${name.trim()}\nEmail: ${email.trim()}\nWhatsApp: ${whatsapp?.trim() || 'No informado'}\nServicio: ${service || 'No informado'}\n\nMensaje:\n${message.trim()}`,
+      })
+      sendJson(response, 200, { sent: true })
+    } catch {
+      sendJson(response, 502, { error: 'No se pudo enviar el email.' })
+    }
     return
   }
 
