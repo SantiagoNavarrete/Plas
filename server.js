@@ -2,9 +2,9 @@ import http from 'node:http'
 import nodemailer from 'nodemailer'
 
 const port = Number(process.env.PORT || 3001)
-const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN
-const siteUrl = process.env.SITE_URL || 'http://localhost:5173'
-const webhookUrl = process.env.MERCADOPAGO_WEBHOOK_URL
+const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN?.trim()
+const siteUrl = (process.env.SITE_URL || 'http://localhost:5173').replace(/\/$/, '')
+const webhookUrl = process.env.MERCADOPAGO_WEBHOOK_URL?.trim()
 const emailUser = process.env.GMAIL_USER
 const emailPassword = process.env.GMAIL_APP_PASSWORD
 const mailTransport = emailUser && emailPassword ? nodemailer.createTransport({
@@ -86,7 +86,7 @@ const server = http.createServer(async (request, response) => {
       items: [{ title: 'Apoyo a PLAS', quantity: 1, currency_id: 'ARS', unit_price: amount }],
       back_urls: { success: `${siteUrl}/#apoyar`, failure: `${siteUrl}/#apoyar`, pending: `${siteUrl}/#apoyar` },
     }
-    if (webhookUrl) preferenceBody.notification_url = webhookUrl
+    if (webhookUrl?.startsWith('https://')) preferenceBody.notification_url = webhookUrl
 
     const mercadoPagoResponse = await fetch('https://api.mercadopago.com/checkout/preferences', {
       method: 'POST',
